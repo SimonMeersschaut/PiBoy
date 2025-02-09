@@ -1,6 +1,7 @@
 import os
 import json
 import glob
+import host_system
 
 class UserInterface:
     def __init__(self):
@@ -13,7 +14,12 @@ class UserInterface:
         '''
 
     def clear(self):
-        os.system('cls')
+        if host_system.name == 'windows':
+            os.system('cls')
+        elif host_system.name == 'Raspberry':
+            os.system('clear')
+        else:
+            pass
     
     def log(self, msg):
         print(msg)
@@ -28,7 +34,9 @@ class UserInterface:
 
         # Perform system checks
         self.log('Running system checks...')
-        ...
+        host_system.get_system_version()
+        
+        # Update software version
         self.log('Updating software')
         status = os.system('git pull')
         if status == 0:
