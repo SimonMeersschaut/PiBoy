@@ -5,8 +5,9 @@ import host_system
 
 class UserInterface:
     def __init__(self):
+        self.host_os = None
         self.title = '''
-    ___   _   ___              
+ ___   _   ___              
 | _ \ (_) | _ )  ___   _  _ 
 |  _/ | | | _ \ / _ \ | || |
 |_|   |_| |___/ \___/  \_, |
@@ -14,9 +15,9 @@ class UserInterface:
         '''
 
     def clear(self):
-        if host_system.system_name == 'windows':
+        if self.host_os == 'windows':
             os.system('cls')
-        elif host_system.system_name == 'Linux':
+        elif self.host_os == 'Linux':
             os.system('clear')
         else:
             pass
@@ -24,8 +25,9 @@ class UserInterface:
     def log(self, msg):
         print(msg)
     
-    def warning(self, msg):
+    def warn(self, msg):
         print(msg)
+        input('Press enter to continue...')
         # TODO: add confirmation button (and optionally red text)
     
     def startup(self):
@@ -34,16 +36,23 @@ class UserInterface:
 
         # Perform system checks
         self.log('Running system checks...')
-        host_system.get_system_version()
+        self.host_os = host_system.get_system_version()
+        if self.host_os == 'Windows':
+            self.log('Running on windows pc (dev mode).')
+        elif self.host_os == 'Linux':
+            self.log('Running on Linux pc.')
+        else:
+            self.warn(f'Operating sytem {self.host_os} is not recognized')
 
         # Update software version
         self.log('Updating software')
-        status = os.system('git pull')
-        if status == 0:
+        rc = os.system('git pull')
+        if rc == 0:
             self.log('Git ok')
         else:
-            self.log('Warning: git pull failed!')
-        ...
+            self.log(f'Status code was: {rc}')
+            self.warn('Warning: git pull failed!?')
+
         self.log('System checks done.')
 
         # Read USB
@@ -65,7 +74,10 @@ class UserInterface:
                     print(f'>>{i+1}) {installed_game.name}<<')
                 else:
                     print(f'{i+1}) {installed_game.name}')
-            input('press enter to refresh') # TODO: replace by button interactions
+            # TODO: replace by button interactions
+            resp = input('press enter to refresh')
+            if resp == 'run':
+                ...
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')
