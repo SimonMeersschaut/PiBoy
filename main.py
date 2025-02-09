@@ -14,9 +14,9 @@ class UserInterface:
         '''
 
     def clear(self):
-        if host_system.name == 'windows':
+        if host_system.system_name == 'windows':
             os.system('cls')
-        elif host_system.name == 'Raspberry':
+        elif host_system.system_name == 'Raspberry':
             os.system('clear')
         else:
             pass
@@ -35,7 +35,7 @@ class UserInterface:
         # Perform system checks
         self.log('Running system checks...')
         host_system.get_system_version()
-        
+
         # Update software version
         self.log('Updating software')
         status = os.system('git pull')
