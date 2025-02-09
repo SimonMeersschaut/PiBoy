@@ -8,5 +8,7 @@ def get_system_version():
     system_name = platform.system()
     if system_name == 'Windows':
         print('Running on windows pc (dev mode).')
+    elif system_name == 'Linux':
+        print('Running on Linux pc.')
     else:
         print(f'Operating sytem {system_name} is not recognized')

@@ -16,7 +16,7 @@ class UserInterface:
     def clear(self):
         if host_system.system_name == 'windows':
             os.system('cls')
-        elif host_system.system_name == 'Raspberry':
+        elif host_system.system_name == 'Linux':
             os.system('clear')
         else:
             pass
