@@ -2,4 +2,5 @@
 import platform
 
 def get_system_version():
+    """Returns the current Operating System (Windows or Linux)."""
     return platform.system()

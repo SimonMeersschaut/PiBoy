@@ -84,6 +84,8 @@ class UserInterface:
                 self.handler = gamehandlers.create_game_handler(manifest_data)
                 # Start handler
                 self.handler.start()
+            else:
+                self.handler.update()
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')
