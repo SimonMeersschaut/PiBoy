@@ -1,0 +1,7 @@
+{
+    "name": "AnnasAnts",
+    "GameHandler": "exe",
+    "HandlerData":{
+        "filename": "gamedata/main.exe"
+    }
+}

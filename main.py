@@ -2,6 +2,7 @@ import os
 import json
 import glob
 import host_system
+import gamehandlers
 
 class UserInterface:
     def __init__(self):
@@ -50,8 +51,7 @@ class UserInterface:
         if rc == 0:
             self.log('Git ok')
         else:
-            self.log(f'Status code was: {rc}')
-            self.warn('Warning: git pull failed!?')
+            self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
 
         self.log('System checks done.')
 
@@ -64,44 +64,33 @@ class UserInterface:
         self.show_main_menu()
 
     def show_main_menu(self):
-        cursor = 1
+        cursor = 2
         while True:
-            self.clear()
+            # self.clear()
             self.log(self.title)
-            installed_games = self.get_installed_games()
-            for i, installed_game in enumerate(installed_games):
+            for i, (_, name) in enumerate(self.get_installed_games()):
                 if cursor == i+1:
-                    print(f'>>{i+1}) {installed_game.name}<<')
+                    print(f'>>{i+1}) {name}<<')
                 else:
-                    print(f'{i+1}) {installed_game.name}')
+                    print(f'{i+1}) {name}')
             # TODO: replace by button interactions
             resp = input('press enter to refresh')
             if resp == 'run':
-                ...
+                self.log("Starting game")
+                # Create new game handler
+                folder = list(self.get_installed_games())[cursor-1][0]
+                with open(folder+'/manifest.json', 'r') as f:
+                    manifest_data = json.load(f)
+                self.handler = gamehandlers.create_game_handler(manifest_data)
+                # Start handler
+                self.handler.start()
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')
         for folder in folders:
-            yield Game(folder)
-
-class Game:
-    def __init__(self, location):
-        self.location = location
-        # read manifest file
-        try:
-            with open(self.location+'/manifest.json', 'r') as f:
-                self.data = json.load(f)
-        except:
-            self.data = None
-    
-    @property
-    def name(self):
-        if self.data is None:
-            return '(No data found)'
-        if not 'name' in self.data:
-            return '(Untitled)'
-        return self.data['name']
-
+            with open(folder+'/manifest.json', 'r') as f:
+                data = json.load(f)
+            yield (folder, data['name'])
     
 if __name__ == '__main__':
     ui = UserInterface()
