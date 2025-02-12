@@ -81,9 +81,9 @@ class CommandHandler(GameHandler):
             print(line.strip())
         # The following dict will map GPIO pins to
         # keycodes, that is keys on the keyboard.
-        # Keycodes can be found here: https://www.haiku-os.org/legacy-docs/bebook/images/TheKeyboard/keymap.png
+        # Keycodes can be found here: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
         keybindings = {
-            16: 0x57 # arrow up
+            16: 0x26 # arrow up
         }
         for pin, key in keybindings.items():
             if GPIO.input(pin) == GPIO.HIGH:

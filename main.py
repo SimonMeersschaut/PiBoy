@@ -80,6 +80,7 @@ class UserInterface:
         ...
         self.log('USB (not) found.')
 
+        time.sleep(2)
         # Show Main menu
         self.show_main_menu()
 
