@@ -41,7 +41,7 @@ class UserInterface:
         if event_type == EventType.RISING:
             # Update window
             self.cursor += 1
-            self.prin_main_menu()
+            self.print_main_menu()
         else:
             ...
     

@@ -28,14 +28,14 @@ class ButtonHandler:
                     event_type=EventType.RISING
                 )
             )
-            # GPIO.add_event_detect(
-            #     button_pin,
-            #     GPIO.FALLING,
-            #     callback=lambda _: self.handle_pin_event(
-            #         pin=button_pin,
-            #         event_type=EventType.FALLING
-            #     )
-            # )
+            GPIO.add_event_detect(
+                button_pin,
+                GPIO.FALLING,
+                callback=lambda _: self.handle_pin_event(
+                    pin=button_pin,
+                    event_type=EventType.FALLING
+                )
+            )
         
     def connect(self, handler:callable):
         self.connected_handler = handler
