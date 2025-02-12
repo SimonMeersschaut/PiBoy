@@ -10,7 +10,7 @@ keyboard = Controller()
 mouse = MouseController()
 
 def create_game_handler(manifest_data):
-    handler = GAME_HANDLERS[manifest_data['GameHandler']](
+    handler = GAME_HANDLERS[manifest_data['GameHandler']['type']](
         handler_data=manifest_data['GameHandlerData'],
         button_handler_data=manifest_data['ButtonHandlerData']
     )
