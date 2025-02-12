@@ -47,6 +47,11 @@ class UserInterface:
 
         # Update software version
         self.log('Updating software')
+        rc = os.system('git stash') # remove any edits to the code
+        if rc == 0:
+            self.log('Git ok')
+        else:
+            self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
         rc = os.system('git pull')
         if rc == 0:
             self.log('Git ok')
@@ -54,7 +59,6 @@ class UserInterface:
             self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
 
         self.log('System checks done.')
-
         # Read USB
         self.log('Checking USB...')
         ...
@@ -64,7 +68,7 @@ class UserInterface:
         self.show_main_menu()
 
     def show_main_menu(self):
-        cursor = 2
+        cursor = 1
         while True:
             # self.clear()
             self.log(self.title)

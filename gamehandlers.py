@@ -53,7 +53,8 @@ class CommandHandler(Handler):
             # cwd=exe_dir,  # Set working directory
             stdout=subprocess.PIPE,  # Capture standard output
             stderr=subprocess.PIPE,  # Capture errors
-            text=True  # Ensure text mode for output
+            text=True,  # Ensure text mode for output
+            shell=True # This is necessary for some games
         )
         print('Game succesfully started up!')
 
