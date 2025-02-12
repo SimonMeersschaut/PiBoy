@@ -21,7 +21,6 @@ class UserInterface:
 |_|   |_| |___/ \___/  \_, |
                         |__/ 
         '''
-        button_handler.connect(self.button_handler)
         self.cursor = 1
 
         # initialize GPIO pins
@@ -88,8 +87,11 @@ class UserInterface:
     def show_main_menu(self):
         cursor = 1
         while True:
-            if GPIO.input(16) == GPIO.HIGH:
-                cursor += 1
+            while True:
+                if GPIO.input(16) == GPIO.HIGH:
+                    cursor += 1
+                    break # update screen
+                time.sleep(.2)
             os.system('cls')
             print(self.title)
             for i, (_, name) in enumerate(self.get_installed_games()):
