@@ -33,14 +33,6 @@ class GameHandler(ABC):
         '''End the game.'''
         ...
 
-    @abstractmethod
-    def handle_button_event(self, event: dict):
-        '''Read the IO pins and handle appropriatly (e.g. press keys)'''
-        keyboard.press(Key.up)
-        time.sleep(.1)
-        keyboard.release(Key.up)
-        
-
 class CommandHandler(GameHandler):
     def __init__(self, handler_data: dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
@@ -72,7 +64,7 @@ class CommandHandler(GameHandler):
             self.process.terminate()  # Terminate the process safely
             self.process.wait()  # Wait for it to fully stop
             print("Process stopped.")
-
+    
 
 
 
