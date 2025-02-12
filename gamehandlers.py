@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import subprocess
 import host_system
+import select
 
 from pynput.keyboard import Controller, Key
 from pynput.mouse import Controller as MouseController
@@ -78,8 +79,11 @@ class CommandHandler(GameHandler):
         '''Read GPIO pins and, if needed, press keys.'''
         print('update')
         # Print Process Output
-        for line in iter(self.process.stdout.readline(), ''):
-            print(line.strip())
+        readable, _, _ = select.select([self.process.stdout], [], [], 0.1)  # Non-blocking check
+        if readable:
+            line = self.process.stdout.readline().strip()
+            if line:
+                print("Latest Output:", line)
         # The following dict will map GPIO pins to
         # keycodes, that is keys on the keyboard.
         # Keycodes can be found here: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
