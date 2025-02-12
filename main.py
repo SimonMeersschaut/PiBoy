@@ -21,7 +21,6 @@ class UserInterface:
 |_|   |_| |___/ \___/  \_, |
                         |__/ 
         '''
-        self.cursor = 1
 
         # initialize GPIO pins
         if host_system.get_system_version() == 'Linux':
@@ -63,17 +62,20 @@ class UserInterface:
             self.warn(f'Operating sytem {self.host_os} is not recognized')
 
         # Update software version
-        self.log('Updating software')
-        rc = os.system('git stash') # remove any edits to the code
-        if rc == 0:
-            self.log('Git ok')
+        if host_system.get_system_version() == 'Windows':
+            self.warn('Windows system -> skipping git update')
         else:
-            self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
-        rc = os.system('git pull')
-        if rc == 0:
-            self.log('Git ok')
-        else:
-            self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
+            self.log('Updating software')
+            rc = os.system('git stash') # remove any edits to the code
+            if rc == 0:
+                self.log('Git ok')
+            else:
+                self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
+            rc = os.system('git pull')
+            if rc == 0:
+                self.log('Git ok')
+            else:
+                self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
 
         self.log('System checks done.')
         # Read USB
@@ -95,7 +97,7 @@ class UserInterface:
             os.system('cls')
             print(self.title)
             for i, (_, name) in enumerate(self.get_installed_games()):
-                if self.cursor == i+1:
+                if cursor == i+1:
                     print(f'>>{i+1}) {name}<<')
                 else:
                     print(f'{i+1}) {name}')
