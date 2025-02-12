@@ -92,6 +92,16 @@ class UserInterface:
     def show_main_menu(self):
         cursor = 1
         while True:
+            cursor = max(1, min(cursor, len(list(self.get_installed_games())))) # 1 <= cursor <= len(...)
+            # Print screen
+            self.clear()
+            print(self.title)
+            for i, (_, name) in enumerate(self.get_installed_games()):
+                if cursor == i+1:
+                    print(f'>>{i+1}) {name}<<')
+                else:
+                    print(f'{i+1}) {name}')
+            # Wait for GPIO interaction
             while True:
                 if GPIO.input(16) == GPIO.HIGH:
                     self.log("Starting game")
@@ -108,15 +118,6 @@ class UserInterface:
                 #     cursor += 1
                 #     break # update screen
                 time.sleep(.2)
-            cursor = max(1, min(cursor, len(list(self.get_installed_games())))) # 1 <= cursor <= len(...)
-            # Print screen
-            self.clear()
-            print(self.title)
-            for i, (_, name) in enumerate(self.get_installed_games()):
-                if cursor == i+1:
-                    print(f'>>{i+1}) {name}<<')
-                else:
-                    print(f'{i+1}) {name}')
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')

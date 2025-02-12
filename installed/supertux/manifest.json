@@ -2,11 +2,11 @@
     "name": "SuperTux",
     "GameHandler": {
         "type":"command",
-        "command": "~/../../usr/games/supertux2"
-    },
-    "ButtonHandlerData": {
-        "keyBindings":{
-            "x":"rightarrow"
+        "command": "~/../../usr/games/supertux2",
+        "ButtonData": {
+            "keyBindings":{
+                "x":"rightarrow"
+            }
         }
     }
 }

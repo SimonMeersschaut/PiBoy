@@ -11,8 +11,7 @@ mouse = MouseController()
 
 def create_game_handler(manifest_data):
     handler = GAME_HANDLERS[manifest_data['GameHandler']['type']](
-        handler_data=manifest_data['GameHandlerData'],
-        button_handler_data=manifest_data['ButtonHandlerData']
+        handler_data=manifest_data['GameHandler'],
     )
     return handler
 
@@ -20,7 +19,7 @@ class GameHandler(ABC):
     '''Base class of a Game Handler Object'''
 
     @abstractmethod
-    def __init__(self, handler_data:dict, button_handler=object):
+    def __init__(self, handler_data:dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         ...
     
@@ -43,11 +42,10 @@ class GameHandler(ABC):
         
 
 class CommandHandler(GameHandler):
-    def __init__(self, handler_data: dict, button_handler: object):
+    def __init__(self, handler_data: dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         self.handler_data = handler_data
         self.window = None # will be set on startup to the current open window
-        self.button_handler = button_handler
     
     def start(self):
         '''Start the game.'''
@@ -80,7 +78,7 @@ class CommandHandler(GameHandler):
 
 GAME_HANDLERS = {
     # 'exe': ExeHandler,
-    'command':CommandHandler
+    'command': CommandHandler
 }
 
 ###################
