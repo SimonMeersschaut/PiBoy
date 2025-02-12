@@ -1,7 +1,12 @@
 {
     "name": "SuperTux",
-    "GameHandler": "command",
-    "HandlerData":{
+    "GameHandler": {
+        "type":"command",
         "command": "~/../../usr/games/supertux2"
+    },
+    "ButtonHandlerData": {
+        "keyBindings":{
+            "x":"rightarrow"
+        }
     }
 }

@@ -3,6 +3,10 @@ import json
 import glob
 import host_system
 import gamehandlers
+from button_handler import button_handler, EventType
+
+button_handler.initialize()
+
 
 class UserInterface:
     def __init__(self):
@@ -14,6 +18,8 @@ class UserInterface:
 |_|   |_| |___/ \___/  \_, |
                         |__/ 
         '''
+        button_handler.connect(self.button_handler)
+        self.cursor = 1
 
     def clear(self):
         if self.host_os == 'windows':
@@ -30,6 +36,14 @@ class UserInterface:
         print(msg)
         input('Press enter to continue...')
         # TODO: add confirmation button (and optionally red text)
+    
+    def button_handler(self, pin: int, event_type:EventType):
+        if event_type == EventType.RISING:
+            # Update window
+            self.cursor += 1
+            self.prin_main_menu()
+        else:
+            ...
     
     def startup(self):
         self.clear()
@@ -65,31 +79,26 @@ class UserInterface:
         self.log('USB (not) found.')
 
         # Show Main menu
-        self.show_main_menu()
+        self.print_main_menu(cursor=self.cursor)
 
-    def show_main_menu(self):
-        cursor = 1
-        while True:
-            # self.clear()
-            self.log(self.title)
-            for i, (_, name) in enumerate(self.get_installed_games()):
-                if cursor == i+1:
-                    print(f'>>{i+1}) {name}<<')
-                else:
-                    print(f'{i+1}) {name}')
-            # TODO: replace by button interactions
-            resp = input('press enter to refresh')
-            if resp == 'run':
-                self.log("Starting game")
-                # Create new game handler
-                folder = list(self.get_installed_games())[cursor-1][0]
-                with open(folder+'/manifest.json', 'r') as f:
-                    manifest_data = json.load(f)
-                self.handler = gamehandlers.create_game_handler(manifest_data)
-                # Start handler
-                self.handler.start()
+    def print_main_menu(self):
+        self.log(self.title)
+        for i, (_, name) in enumerate(self.get_installed_games()):
+            if self.cursor == i+1:
+                print(f'>>{i+1}) {name}<<')
             else:
-                self.handler.update()
+                print(f'{i+1}) {name}')
+        # # TODO: replace by button interactions
+        # resp = input('press enter to refresh')
+        # if resp == 'run':
+        #     self.log("Starting game")
+        #     # Create new game handler
+        #     folder = list(self.get_installed_games())[cursor-1][0]
+        #     with open(folder+'/manifest.json', 'r') as f:
+        #         manifest_data = json.load(f)
+        #     self.handler = gamehandlers.create_game_handler(manifest_data)
+        #     # Start handler
+        #     self.handler.start()
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')

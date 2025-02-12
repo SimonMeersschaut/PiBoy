@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
 import subprocess
-import os
 import time
-import host_system
 
 from pynput.keyboard import Controller, Key
 from pynput.mouse import Controller as MouseController
@@ -12,13 +10,17 @@ keyboard = Controller()
 mouse = MouseController()
 
 def create_game_handler(manifest_data):
-    return HANDLERS[manifest_data['GameHandler']](manifest_data['HandlerData'])
+    handler = GAME_HANDLERS[manifest_data['GameHandler']](
+        handler_data=manifest_data['GameHandlerData'],
+        button_handler_data=manifest_data['ButtonHandlerData']
+    )
+    return handler
 
-class Handler(ABC):
+class GameHandler(ABC):
     '''Base class of a Game Handler Object'''
 
     @abstractmethod
-    def __init__(self, handler_data:dict):
+    def __init__(self, handler_data:dict, button_handler=object):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         ...
     
@@ -33,16 +35,19 @@ class Handler(ABC):
         ...
 
     @abstractmethod
-    def update(self):
+    def handle_button_event(self, event: dict):
         '''Read the IO pins and handle appropriatly (e.g. press keys)'''
-        ...
+        keyboard.press(Key.up)
+        time.sleep(.1)
+        keyboard.release(Key.up)
         
 
-class CommandHandler(Handler):
-    def __init__(self, handler_data: dict):
+class CommandHandler(GameHandler):
+    def __init__(self, handler_data: dict, button_handler: object):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         self.handler_data = handler_data
         self.window = None # will be set on startup to the current open window
+        self.button_handler = button_handler
     
     def start(self):
         '''Start the game.'''
@@ -70,18 +75,17 @@ class CommandHandler(Handler):
             self.process.wait()  # Wait for it to fully stop
             print("Process stopped.")
 
-    def update(self):
-        '''Read the IO pins and handle appropriatly (e.g. press keys)'''
-        keyboard.press(Key.up)
-        time.sleep(.1)
-        keyboard.release(Key.up)
 
 
 
-HANDLERS = {
+GAME_HANDLERS = {
     # 'exe': ExeHandler,
     'command':CommandHandler
 }
+
+###################
+# BUTTON HANDLERS #
+###################
 
 if __name__ == '__main__':
     # test = ExeHandler({"filename": "gamedata/main.exe"})
