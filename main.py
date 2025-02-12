@@ -89,7 +89,7 @@ class UserInterface:
             cursor = max(1, min(cursor, len(list(self.get_installed_games())))) # 1 <= cursor <= len(...)
             # Print screen
             self.clear()
-            print(self.title)
+            tprint('PiBoy')
             for i, (_, name) in enumerate(self.get_installed_games()):
                 if cursor == i+1:
                     print(f'>>{i+1}) {name}<<')
@@ -97,23 +97,24 @@ class UserInterface:
                     print(f'{i+1}) {name}')
             # Wait for GPIO interaction
             while True:
-                if GPIO.input(16) == GPIO.HIGH:
-                    self.log("Starting game")
-                    # Read manifest data and create a GameHandler
-                    folder = list(self.get_installed_games())[cursor-1][0]
-                    with open(folder+'/manifest.json', 'r') as f:
-                        manifest_data = json.load(f)
-                    self.clear()
-                    tprint(manifest_data['name']) # print the game's title
-                    self.handler = gamehandlers.create_game_handler(manifest_data)
-                    # Start handler
-                    self.handler.start()
-                    time.sleep(2)
-                    break
-                # elif GPIO.input(16) == GPIO.HIGH:
-                #     cursor += 1
-                #     break # update screen
-                time.sleep(.2)
+                if host_system.get_system_version() == 'Linux':
+                    if GPIO.input(16) == GPIO.HIGH:
+                        self.log("Starting game")
+                        # Read manifest data and create a GameHandler
+                        folder = list(self.get_installed_games())[cursor-1][0]
+                        with open(folder+'/manifest.json', 'r') as f:
+                            manifest_data = json.load(f)
+                        self.clear()
+                        tprint(manifest_data['name']) # print the game's title
+                        self.handler = gamehandlers.create_game_handler(manifest_data)
+                        # Start handler
+                        self.handler.start()
+                        time.sleep(2)
+                        break
+                    # elif GPIO.input(16) == GPIO.HIGH:
+                    #     cursor += 1
+                    #     break # update screen
+                    time.sleep(.2)
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')

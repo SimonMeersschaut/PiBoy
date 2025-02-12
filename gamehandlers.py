@@ -33,7 +33,6 @@ class GameHandler(ABC):
         '''End the game.'''
         ...
     
-    @abstractmethod
     @property
     def running(self) -> bool:
         '''Returns if the game is running.'''
