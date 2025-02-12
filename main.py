@@ -2,11 +2,11 @@ import os
 import json
 import glob
 import time
-from host_system import get_system_version
+import host_system
 # import gamehandlers
 
 
-if get_system_version() == 'Linux':
+if host_system.get_system_version() == 'Linux':
     import RPi.GPIO as GPIO # module can not be imported in Windows
 
 
@@ -25,12 +25,13 @@ class UserInterface:
         self.cursor = 1
 
         # initialize GPIO pins
-        GPIO.cleanup()
-        GPIO.setmode(GPIO.BCM)
-        
-        button_pins = [16]
-        for button_pin in button_pins:
-            GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        if host_system.get_system_version() == 'Linux':
+            GPIO.cleanup()
+            GPIO.setmode(GPIO.BCM)
+            
+            button_pins = [16]
+            for button_pin in button_pins:
+                GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
     def clear(self):
         if self.host_os == 'windows':
@@ -47,14 +48,6 @@ class UserInterface:
         print(msg)
         input('Press enter to continue...')
         # TODO: add confirmation button (and optionally red text)
-    
-    def button_handler(self, pin: int, event_type:EventType):
-        if event_type == EventType.RISING:
-            # Update window
-            self.cursor += 1
-            self.print_main_menu()
-        else:
-            ...
     
     def startup(self):
         self.clear()
