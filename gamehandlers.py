@@ -48,6 +48,9 @@ class CommandHandler(GameHandler):
         self.process = None
         self.handler_data = handler_data
         self.window = None # will be set on startup to the current open window
+        # keep track of pins that were high last update
+        # used to speed up the mainloop
+        self.high_pins = set()
     
     def start(self):
         '''Start the game.'''
@@ -90,11 +93,21 @@ class CommandHandler(GameHandler):
         }
         for pin, key in keybindings.items():
             if GPIO.input(pin) == GPIO.HIGH:
-                keyboard.press(key)
                 print('press down')
+                if pin in self.high_pins:
+                    # already pressed
+                    pass
+                else:
+                    keyboard.press(key)
+                    self.high_pins.add(pin)
             else:
-                keyboard.release(key)
                 print('key up')
+                if not pin in self.high_pins:
+                    # already up
+                    pass
+                else:
+                    keyboard.release(key)
+                    self.high_pins.remove(pin)
     
     @property
     def running(self):
