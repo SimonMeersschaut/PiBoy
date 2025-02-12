@@ -76,6 +76,7 @@ class CommandHandler(GameHandler):
     
     def update(self):
         '''Read GPIO pins and, if needed, press keys.'''
+        print('update')
         # Print Process Output
         for line in iter(self.process.stdout.readline(), ''):
             print(line.strip())
@@ -88,8 +89,10 @@ class CommandHandler(GameHandler):
         for pin, key in keybindings.items():
             if GPIO.input(pin) == GPIO.HIGH:
                 keyboard.press(key)
+                print('press down')
             else:
                 keyboard.release(key)
+                print('key up')
     
     @property
     def running(self):

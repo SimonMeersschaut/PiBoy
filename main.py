@@ -76,9 +76,9 @@ class UserInterface:
 
         self.log('System checks done.')
         # Read USB
-        self.log('Checking USB...')
-        ...
-        self.log('USB (not) found.')
+        # self.log('Checking USB...')
+        # ...
+        # self.log('USB (not) found.')
 
         time.sleep(2)
         # Show Main menu
@@ -112,9 +112,11 @@ class UserInterface:
                         # Start handler
                         self.handler.start()
                         # Handler mainloop
+                        self.log('Starting game mainloop')
                         while self.handler.running:
                             self.handler.update() # read GPIO and press keys
                             time.sleep(.1) # timout
+                        self.log('Ended game mainloop')
                         break
                     # elif GPIO.input(16) == GPIO.HIGH:
                     #     cursor += 1
