@@ -1,0 +1,7 @@
+{
+    "name": "SuperTux",
+    "GameHandler": "command",
+    "HandlerData":{
+        "command": "~/../../usr/games/supertux2"
+    }
+}

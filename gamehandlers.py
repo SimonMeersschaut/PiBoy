@@ -21,39 +21,44 @@ class Handler(ABC):
     def __init__(self, handler_data:dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         ...
+    
+    @abstractmethod
+    def start(self):
+        '''Start the game.'''
+        ...
+    
+    @abstractmethod
+    def stop(self):
+        '''End the game.'''
+        ...
+
+    @abstractmethod
+    def update(self):
+        '''Read the IO pins and handle appropriatly (e.g. press keys)'''
+        ...
         
 
-class ExeHandler(Handler):
+class CommandHandler(Handler):
     def __init__(self, handler_data: dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
         self.handler_data = handler_data
         self.window = None # will be set on startup to the current open window
     
     def start(self):
-        print('Starting exe file.')
-        # Path to the exe file
-        exe_path = "installed/tetris/Tetris.exe"
-        exe_dir = os.path.dirname(exe_path)  # Extract directory
-        
-        if host_system.get_system_version() == 'Windows':
-            command = exe_path
-        elif host_system.get_system_version() == 'Linux':
-            # On Raspberry pi, use the wine emulator
-            command = ["wine", exe_path]
-        else:
-            raise RuntimeError('Host Operating System not recognized.')
-
+        '''Start the game.'''
+        print('Starting game.')
         # Run the exe from its own directory
         self.process = subprocess.Popen(
-            command,
-            cwd=exe_dir,  # Set working directory
+            self.handler_data['command'],
+            # cwd=exe_dir,  # Set working directory
             stdout=subprocess.PIPE,  # Capture standard output
             stderr=subprocess.PIPE,  # Capture errors
             text=True  # Ensure text mode for output
         )
-        print('Exe file succesfully started up!')
+        print('Game succesfully started up!')
 
     def stop(self):
+        '''End the game.'''
         # Read output in real time
         try:
             for line in self.process.stdout:
@@ -65,15 +70,19 @@ class ExeHandler(Handler):
             print("Process stopped.")
 
     def update(self):
+        '''Read the IO pins and handle appropriatly (e.g. press keys)'''
         keyboard.press(Key.up)
         time.sleep(.1)
         keyboard.release(Key.up)
 
 
+
 HANDLERS = {
-    'exe': ExeHandler
+    # 'exe': ExeHandler,
+    'command':CommandHandler
 }
 
 if __name__ == '__main__':
-    test = ExeHandler({"filename": "gamedata/main.exe"})
-    test.start()
+    # test = ExeHandler({"filename": "gamedata/main.exe"})
+    # test.start()
+    ...

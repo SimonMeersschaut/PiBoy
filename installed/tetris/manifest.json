@@ -1,7 +1,0 @@
-{
-    "name": "Tetris",
-    "GameHandler": "exe",
-    "HandlerData":{
-        "filename": "gamedata/Tetris.exe"
-    }
-}
