@@ -68,14 +68,17 @@ class UserInterface:
             self.log('Updating software')
             rc = os.system('git stash') # remove any edits to the code
             if rc == 0:
+                # (Nothing to stash)
                 self.log('Git ok')
             else:
                 self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
             rc = os.system('git pull')
             if rc == 0:
+                # Up to date
                 self.log('Git ok')
             else:
                 self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
+                # TODO: restart script
 
         self.log('System checks done.')
         # Read USB
