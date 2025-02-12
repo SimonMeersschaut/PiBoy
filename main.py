@@ -74,7 +74,7 @@ class UserInterface:
                 self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
             rc = os.system('git pull')
             if rc == 0:
-                # Up to date
+                # Up to date | 'Successfully rebased and updated ...'
                 self.log('Git ok')
             else:
                 self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
@@ -97,7 +97,9 @@ class UserInterface:
                     cursor += 1
                     break # update screen
                 time.sleep(.2)
-            os.system('cls')
+            cursor = max(1, min(cursor, len(self.get_installed_games()))) # 1 <= cursor <= len(...)
+            # Print screen
+            self.clear()
             print(self.title)
             for i, (_, name) in enumerate(self.get_installed_games()):
                 if cursor == i+1:
