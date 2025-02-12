@@ -4,6 +4,7 @@ import glob
 import time
 import host_system
 import gamehandlers
+from art import tprint
 
 
 if host_system.get_system_version() == 'Linux':
@@ -14,13 +15,6 @@ if host_system.get_system_version() == 'Linux':
 class UserInterface:
     def __init__(self):
         self.host_os = None
-        self.title = '''
- ___   _   ___              
-| _ \ (_) | _ )  ___   _  _ 
-|  _/ | | | _ \ / _ \ | || |
-|_|   |_| |___/ \___/  \_, |
-                        |__/ 
-        '''
 
         # initialize GPIO pins
         if host_system.get_system_version() == 'Linux':
@@ -49,7 +43,7 @@ class UserInterface:
     
     def startup(self):
         self.clear()
-        self.log(self.title)
+        tprint('PiBoy')
 
         # Perform system checks
         self.log('Running system checks...')
@@ -109,6 +103,8 @@ class UserInterface:
                     folder = list(self.get_installed_games())[cursor-1][0]
                     with open(folder+'/manifest.json', 'r') as f:
                         manifest_data = json.load(f)
+                    self.clear()
+                    tprint(manifest_data['name']) # print the game's title
                     self.handler = gamehandlers.create_game_handler(manifest_data)
                     # Start handler
                     self.handler.start()

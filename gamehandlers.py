@@ -32,10 +32,17 @@ class GameHandler(ABC):
     def stop(self):
         '''End the game.'''
         ...
+    
+    @abstractmethod
+    @property
+    def running(self) -> bool:
+        '''Returns if the game is running.'''
+        ...
 
 class CommandHandler(GameHandler):
     def __init__(self, handler_data: dict):
         '''Initialize the Game Handler with the handler_data data (from the manifest json file).'''
+        self.process = None
         self.handler_data = handler_data
         self.window = None # will be set on startup to the current open window
     
@@ -64,6 +71,18 @@ class CommandHandler(GameHandler):
             self.process.terminate()  # Terminate the process safely
             self.process.wait()  # Wait for it to fully stop
             print("Process stopped.")
+    
+    @property
+    def running(self):
+        if self.process is None:
+            # process not started yet
+            return False
+        elif self.process.poll() is None:
+            # still running
+            return True
+        else:
+            # finished
+            return False
     
 
 
