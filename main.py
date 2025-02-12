@@ -2,7 +2,7 @@ import os
 import json
 import glob
 import host_system
-import gamehandlers
+# import gamehandlers
 from button_handler import button_handler, EventType
 
 button_handler.initialize()
@@ -79,7 +79,7 @@ class UserInterface:
         self.log('USB (not) found.')
 
         # Show Main menu
-        self.print_main_menu(cursor=self.cursor)
+        self.print_main_menu()
 
     def print_main_menu(self):
         self.log(self.title)
@@ -99,6 +99,7 @@ class UserInterface:
         #     self.handler = gamehandlers.create_game_handler(manifest_data)
         #     # Start handler
         #     self.handler.start()
+        input() # block the code
     
     def get_installed_games(self) -> list:
         folders = glob.glob('installed/*')
