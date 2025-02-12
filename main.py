@@ -4,7 +4,6 @@ import glob
 import time
 from host_system import get_system_version
 # import gamehandlers
-from button_handler import button_handler, EventType
 
 
 if get_system_version() == 'Linux':
@@ -24,7 +23,7 @@ class UserInterface:
         '''
         button_handler.connect(self.button_handler)
         self.cursor = 1
-        
+
         # initialize GPIO pins
         GPIO.cleanup()
         GPIO.setmode(GPIO.BCM)
