@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 import subprocess
-import time
+import host_system
 
 from pynput.keyboard import Controller, Key
 from pynput.mouse import Controller as MouseController
+
+if host_system.get_system_version() == 'Linux':
+    import RPi.GPIO as GPIO # module can not be imported in Windows
 
 # Create keyboard and mouse controllers
 keyboard = Controller()
@@ -52,8 +55,8 @@ class CommandHandler(GameHandler):
         self.process = subprocess.Popen(
             self.handler_data['command'],
             # cwd=exe_dir,  # Set working directory
-            stdout=subprocess.PIPE,  # Capture standard output
-            stderr=subprocess.PIPE,  # Capture errors
+            stdout=subprocess.PIPE,  # Capture standard output (to show in terminal)
+            stderr=subprocess.PIPE,  # Capture errors (to show in terminal)
             text=True,  # Ensure text mode for output
             shell=True # This is necessary for some games
         )
@@ -70,6 +73,23 @@ class CommandHandler(GameHandler):
             self.process.terminate()  # Terminate the process safely
             self.process.wait()  # Wait for it to fully stop
             print("Process stopped.")
+    
+    def update(self):
+        '''Read GPIO pins and, if needed, press keys.'''
+        # Print Process Output
+        for line in iter(self.process.stdout.readline(), ''):
+            print(line.strip())
+        # The following dict will map GPIO pins to
+        # keycodes, that is keys on the keyboard.
+        # Keycodes can be found here: https://www.haiku-os.org/legacy-docs/bebook/images/TheKeyboard/keymap.png
+        keybindings = {
+            16: 0x57 # arrow up
+        }
+        for pin, key in keybindings.items():
+            if GPIO.input(pin) == GPIO.HIGH:
+                keyboard.press(key)
+            else:
+                keyboard.release(key)
     
     @property
     def running(self):

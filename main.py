@@ -84,6 +84,7 @@ class UserInterface:
         self.show_main_menu()
 
     def show_main_menu(self):
+        '''This function shows a main menu and will run game-handlers.'''
         cursor = 1
         while True:
             cursor = max(1, min(cursor, len(list(self.get_installed_games())))) # 1 <= cursor <= len(...)
@@ -109,7 +110,10 @@ class UserInterface:
                         self.handler = gamehandlers.create_game_handler(manifest_data)
                         # Start handler
                         self.handler.start()
-                        time.sleep(2)
+                        # Handler mainloop
+                        while self.handler.running:
+                            self.handler.update() # read GPIO and press keys
+                            time.sleep(.1) # timout
                         break
                     # elif GPIO.input(16) == GPIO.HIGH:
                     #     cursor += 1
