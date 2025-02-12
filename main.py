@@ -115,7 +115,7 @@ class UserInterface:
                         self.log('Starting game mainloop')
                         while self.handler.running:
                             self.handler.update() # read GPIO and press keys
-                            time.sleep(.1) # timout
+                            # time.sleep(.05) # timout
                         self.log('Ended game mainloop')
                         break
                     # elif GPIO.input(16) == GPIO.HIGH:
