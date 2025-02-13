@@ -11,10 +11,15 @@ if host_system.get_system_version() == 'Linux':
     import RPi.GPIO as GPIO # module can not be imported in Windows
 
 
-
 class UserInterface:
     def __init__(self):
         self.host_os = None
+        try:
+            with open('config.json', 'r') as f:
+                self.data = json.load(f)
+        except FileNotFoundError:
+            self.warn('No config json file found! Continuing with empty json data.')
+            self.data = {}
 
     def clear(self):
         if self.host_os == 'windows':
@@ -30,6 +35,7 @@ class UserInterface:
     def warn(self, msg):
         print(msg)
         if host_system.get_system_version() == 'Linux':
+            # Linux (Raspberry Pi)
             print('Press the OK button to continue')
             while GPIO.input(16) == GPIO.LOW:
                 time.sleep(.1) # wait
@@ -55,14 +61,13 @@ class UserInterface:
             self.log('[GPIO] skipped')
 
         # Perform system checks
-        self.log('[HOST] starting...')
         self.host_os = host_system.get_system_version()
         if self.host_os == 'Windows':
-            self.log('[HOST] Running on windows pc (dev mode).')
+            self.log('[HOST] windows')
         elif self.host_os == 'Linux':
-            self.log('[HOST] Running on Linux pc.')
+            self.log('[HOST] Linux')
         else:
-            self.warn(f'[HOST] Operating sytem {self.host_os} is not recognized')
+            self.warn(f'[HOST] Operating sytem {self.host_os} is not recognized!')
 
         # Update software version
         self.log('[VERSION] Starting version control')
@@ -73,31 +78,71 @@ class UserInterface:
             rc = os.system('git stash') # remove any edits to the code
             if rc == 0:
                 # (Nothing to stash)
-                self.log('[VERSION] Git stash OK')
+                pass
             else:
                 self.warn(f'[VERSION] Status code: {rc}!')
             rc = os.system('git pull')
             if rc == 0:
                 # Up to date | 'Successfully rebased and updated ...'
-                self.log('[VERSION] Git pull OK')
+                pass
             else:
                 self.warn(f'[VERSION] Status code: {rc}!')
 
-        self.log('[VERSION] done.')
         # Read USB
         # self.log('Checking USB...')
         # ...
         # self.log('USB (not) found.')
 
         time.sleep(2)
+        # check for auto-start
+        try:
+            if self.data['auto-start']['enabled']:
+                # do auto start
+                self.log('auto starting '+self.data['auto-start']['folder'])
+                self.run_game(self.data['auto-start']['folder'])
+        except KeyError:
+            self.warn('KeyError during reading auto-start config!')
         # Show Main menu
         self.show_main_menu()
+    
+    def run_game(self, folder_name):
+        '''
+        Start the game and handle button presses.
+        This function ends only if the game quits.
+        '''
+        self.log("Starting game")
+        # Read manifest data and create a GameHandler
+        try:
+            with open(folder_name+'/manifest.json', 'r') as f:
+                manifest_data = json.load(f)
+        except FileNotFoundError:
+            self.warn('The wanted game was not found!')
+            return
+        self.clear()
+        tprint(manifest_data['name']) # print the game's title
+        try:
+            self.handler = gamehandlers.create_game_handler(manifest_data)
+        except Exception as e:
+            self.warn('Unexpected error: '+e.__repr__())
+            return
+        # Start handler
+        self.handler.start()
+        # Handler mainloop
+        self.log('Starting game mainloop')
+        while self.handler.running:
+            self.handler.update() # read GPIO and press keys
+            # time.sleep(.05) # timout
+        self.log('Ended game mainloop')
 
     def show_main_menu(self):
         '''This function shows a main menu and will run game-handlers.'''
         cursor = 1
         while True:
-            cursor = max(1, min(cursor, len(list(self.get_installed_games())))) # 1 <= cursor <= len(...)
+            # Set cursor bounds: 1 <= cursor <= len(...)
+            if cursor > len(list(self.get_installed_games())):
+                cursor = 1
+            elif cursor < 1:
+                cursor = len(list(self.get_installed_games()))
             # Print screen
             self.clear()
             tprint('PiBoy')
@@ -110,22 +155,8 @@ class UserInterface:
             while True:
                 if host_system.get_system_version() == 'Linux':
                     if GPIO.input(16) == GPIO.HIGH:
-                        self.log("Starting game")
-                        # Read manifest data and create a GameHandler
-                        folder = list(self.get_installed_games())[cursor-1][0]
-                        with open(folder+'/manifest.json', 'r') as f:
-                            manifest_data = json.load(f)
-                        self.clear()
-                        tprint(manifest_data['name']) # print the game's title
-                        self.handler = gamehandlers.create_game_handler(manifest_data)
-                        # Start handler
-                        self.handler.start()
-                        # Handler mainloop
-                        self.log('Starting game mainloop')
-                        while self.handler.running:
-                            self.handler.update() # read GPIO and press keys
-                            # time.sleep(.05) # timout
-                        self.log('Ended game mainloop')
+                        folder_name = list(self.get_installed_games())[cursor-1][0]
+                        self.run_game(folder_name) # blocking 
                         break
                     # elif GPIO.input(16) == GPIO.HIGH:
                     #     cursor += 1

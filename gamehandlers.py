@@ -14,10 +14,15 @@ keyboard = Controller()
 mouse = MouseController()
 
 def create_game_handler(manifest_data):
-    handler = GAME_HANDLERS[manifest_data['GameHandler']['type']](
-        handler_data=manifest_data['GameHandler'],
-    )
-    return handler
+    try:
+        if not manifest_data['GameHandler']['type'] in GAME_HANDLERS:
+            raise KeyError('The provided GameHandler-type was not found!')
+        handler = GAME_HANDLERS[manifest_data['GameHandler']['type']](
+            handler_data=manifest_data['GameHandler'],
+        )
+        return handler
+    except KeyError:
+        raise KeyError()
 
 class GameHandler(ABC):
     '''Base class of a Game Handler Object'''
