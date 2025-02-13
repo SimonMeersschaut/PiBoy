@@ -80,7 +80,6 @@ class CommandHandler(GameHandler):
     
     def update(self):
         '''Read GPIO pins and, if needed, press keys.'''
-        print('update')
         # Print Process Output
         # readable, _, _ = select.select([self.process.stdout], [], [], 0.1)  # Non-blocking check
         # if readable:
