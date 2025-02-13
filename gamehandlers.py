@@ -89,11 +89,11 @@ class CommandHandler(GameHandler):
         #         print("Latest Output:", line)
 
         keybindings = {
-            16: Key.up
+            16: Key.right,
+            20: Key.enter
         }
         for pin, key in keybindings.items():
             if GPIO.input(pin) == GPIO.HIGH:
-                print('press down')
                 if pin in self.high_pins:
                     # already pressed
                     pass
@@ -101,7 +101,6 @@ class CommandHandler(GameHandler):
                     keyboard.press(key)
                     self.high_pins.add(pin)
             else:
-                print('key up')
                 if not pin in self.high_pins:
                     # already up
                     pass
