@@ -21,7 +21,7 @@ class UserInterface:
             GPIO.cleanup()
             GPIO.setmode(GPIO.BCM)
             
-            button_pins = [16]
+            button_pins = [16, 20]
             for button_pin in button_pins:
                 GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
