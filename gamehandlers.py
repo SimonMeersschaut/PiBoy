@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import subprocess
 import host_system
-import select
+# import select
 
 from pynput.keyboard import Controller, Key
 from pynput.mouse import Controller as MouseController

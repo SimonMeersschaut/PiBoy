@@ -5,6 +5,7 @@ import time
 import host_system
 import gamehandlers
 from art import tprint
+import subprocess
 
 
 if host_system.get_system_version() == 'Linux':
@@ -49,7 +50,7 @@ class UserInterface:
 
         # Setup GPIO pins (Linux only)
         if host_system.get_system_version() == 'Linux':
-            self.log('[GPIO] initializing...')
+            # self.log('[GPIO] initializing...')
             GPIO.cleanup()
             GPIO.setmode(GPIO.BCM)
             
@@ -62,31 +63,52 @@ class UserInterface:
 
         # Perform system checks
         self.host_os = host_system.get_system_version()
-        if self.host_os == 'Windows':
-            self.log('[HOST] windows')
-        elif self.host_os == 'Linux':
-            self.log('[HOST] Linux')
-        else:
+        if self.host_os != 'Windows' and self.host_os != 'Linux':
             self.warn(f'[HOST] Operating sytem {self.host_os} is not recognized!')
 
         # Update software version
-        self.log('[VERSION] Starting version control')
+        # self.log('[VERSION] Starting version control')
         if host_system.get_system_version() == 'Windows':
-            self.log('[VERSION] skipping git update (windows host)')
+            # self.log('[VERSION] skipping git update (windows host)')
+            pass
         else:
-            self.log('[VERSION] Updating software')
-            rc = os.system('git stash') # remove any edits to the code
+            # GIT STASH
+            process = subprocess.Popen(
+                'git stash', # command: remove local edits
+                # cwd=exe_dir,  # Set working directory
+                stdout=subprocess.PIPE,  # Capture standard output (to show in terminal)
+                stderr=subprocess.PIPE,  # Capture errors (to show in terminal)
+                text=True,  # Ensure text mode for output
+                shell=True # This is necessary for some games
+            )
+            rc = process.wait() # remove any edits to the code
             if rc == 0:
                 # (Nothing to stash)
                 pass
             else:
-                self.warn(f'[VERSION] Status code: {rc}!')
-            rc = os.system('git pull')
+                # print output
+                self.log('[GIT]' + process.stdout)
+                self.log('[GIT]' + process.stderr)
+                self.warn(f'[GIT] Status code: {rc}!')
+            
+            # GIT PULL
+            process = subprocess.Popen(
+                'git pull', # command: remove local edits
+                # cwd=exe_dir,  # Set working directory
+                stdout=subprocess.PIPE,  # Capture standard output (to show in terminal)
+                stderr=subprocess.PIPE,  # Capture errors (to show in terminal)
+                text=True,  # Ensure text mode for output
+                shell=True # This is necessary for some games
+            )
+            rc = process.wait() # remove any edits to the code
             if rc == 0:
                 # Up to date | 'Successfully rebased and updated ...'
                 pass
             else:
-                self.warn(f'[VERSION] Status code: {rc}!')
+                self.log('[GIT]' + process.stdout)
+                self.log('[GIT]' + process.stderr)
+                self.warn(f'[GIT] Status code: {rc}!')
+        self.log('[GIT] software updated')
 
         # Read USB
         # self.log('Checking USB...')
@@ -98,10 +120,10 @@ class UserInterface:
         try:
             if self.data['auto-start']['enabled']:
                 # do auto start
-                self.log('auto starting '+self.data['auto-start']['folder'])
+                self.log('[AUTO-START] starting '+self.data['auto-start']['folder'])
                 self.run_game(self.data['auto-start']['folder'])
         except KeyError:
-            self.warn('KeyError during reading auto-start config!')
+            self.warn('[AUTO-START] KeyError during reading auto-start config!')
         # Show Main menu
         self.show_main_menu()
     
@@ -110,7 +132,6 @@ class UserInterface:
         Start the game and handle button presses.
         This function ends only if the game quits.
         '''
-        self.log("Starting game")
         # Read manifest data and create a GameHandler
         try:
             with open(folder_name+'/manifest.json', 'r') as f:
