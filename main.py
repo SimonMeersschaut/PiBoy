@@ -16,15 +16,6 @@ class UserInterface:
     def __init__(self):
         self.host_os = None
 
-        # initialize GPIO pins
-        if host_system.get_system_version() == 'Linux':
-            GPIO.cleanup()
-            GPIO.setmode(GPIO.BCM)
-            
-            button_pins = [16, 20]
-            for button_pin in button_pins:
-                GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
     def clear(self):
         if self.host_os == 'windows':
             os.system('cls')
@@ -38,43 +29,61 @@ class UserInterface:
     
     def warn(self, msg):
         print(msg)
-        input('Press enter to continue...')
-        # TODO: add confirmation button (and optionally red text)
+        if host_system.get_system_version() == 'Linux':
+            print('Press the OK button to continue')
+            while GPIO.input(16) == GPIO.LOW:
+                time.sleep(.1) # wait
+        else:
+            # Windows (dev)
+            input('Press enter to continue...')
     
     def startup(self):
         self.clear()
         tprint('PiBoy')
 
+        # Setup GPIO pins (Linux only)
+        if host_system.get_system_version() == 'Linux':
+            self.log('[GPIO] initializing...')
+            GPIO.cleanup()
+            GPIO.setmode(GPIO.BCM)
+            
+            button_pins = [16, 20]
+            for button_pin in button_pins:
+                GPIO.setup(button_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            self.log('[GPIO] Done')
+        else:
+            self.log('[GPIO] skipped')
+
         # Perform system checks
-        self.log('Running system checks...')
+        self.log('[HOST] starting...')
         self.host_os = host_system.get_system_version()
         if self.host_os == 'Windows':
-            self.log('Running on windows pc (dev mode).')
+            self.log('[HOST] Running on windows pc (dev mode).')
         elif self.host_os == 'Linux':
-            self.log('Running on Linux pc.')
+            self.log('[HOST] Running on Linux pc.')
         else:
-            self.warn(f'Operating sytem {self.host_os} is not recognized')
+            self.warn(f'[HOST] Operating sytem {self.host_os} is not recognized')
 
         # Update software version
+        self.log('[VERSION] Starting version control')
         if host_system.get_system_version() == 'Windows':
-            self.warn('Windows system -> skipping git update')
+            self.log('[VERSION] skipping git update (windows host)')
         else:
-            self.log('Updating software')
+            self.log('[VERSION] Updating software')
             rc = os.system('git stash') # remove any edits to the code
             if rc == 0:
                 # (Nothing to stash)
-                self.log('Git ok')
+                self.log('[VERSION] Git stash OK')
             else:
-                self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
+                self.warn(f'[VERSION] Status code: {rc}!')
             rc = os.system('git pull')
             if rc == 0:
                 # Up to date | 'Successfully rebased and updated ...'
-                self.log('Git ok')
+                self.log('[VERSION] Git pull OK')
             else:
-                self.warn(f'Status code of git was: {rc}. Press Enter to continue.')
-                # TODO: restart script
+                self.warn(f'[VERSION] Status code: {rc}!')
 
-        self.log('System checks done.')
+        self.log('[VERSION] done.')
         # Read USB
         # self.log('Checking USB...')
         # ...
