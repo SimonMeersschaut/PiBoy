@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, globalShortcut} = require('electron');
 const path = require('path');
 
 // This function creates the main window
@@ -17,6 +17,8 @@ function createWindow() {
 }
 
 
+
+
 // Called when Electron is ready
 app.whenReady().then(createWindow);
 
@@ -32,4 +34,15 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
+});
+
+// For closing on ESC
+app.whenReady().then(() => {
+  const mainWindow = new BrowserWindow();
+  mainWindow.loadFile('index.html');
+
+  // Register ESC key
+  globalShortcut.register('Escape', () => {
+    app.quit();
+  });
 });
