@@ -13,7 +13,7 @@ TODO: fill out software docs
 
 1. **Install git**
 
-```sudo apt install git```
+```sudo apt install -y git```
 
 2. **Clone git repository**
 
@@ -21,7 +21,7 @@ TODO: fill out software docs
 
 3. **Run the startup script**
 
-```./startup.sh```
+```chmod +x ./startup.sh && ./startup.sh```
 
 ## Hardware
 
