@@ -16,6 +16,12 @@ sudo apt install -y \
   libx11-xcb1 \
   libgbm1
 
+# Libraries for input drivers (Touch screen)
+sudo apt install -y \
+  xserver-xorg-input-evdev \
+  xserver-xorg-input-libinput
+
+
 # Install Node.js on the Pi
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt install -y nodejs

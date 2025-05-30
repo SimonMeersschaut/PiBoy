@@ -21,7 +21,16 @@ TODO: fill out software docs
 
 3. **Run the startup script**
 
-```chmod +x ./startup.sh && ./startup.sh```
+```
+chmod +x ./startup.sh
+./startup.sh
+```
+
+4. **Run the app**
+
+```
+chmod +x ./run.sh
+startx /home/pi/start-electron.sh```
 
 ## Hardware
 

@@ -1,1 +1,3 @@
-startx /usr/bin/npx electron /home/pi/PiBoy/my-electron-app
+#!/bin/bash
+cd /home/pi/piBoy/my-electron-app
+npx electron .
