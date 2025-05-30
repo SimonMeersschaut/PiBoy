@@ -33,3 +33,8 @@ npm install electron
 # Verify instalation
 node -v
 npm -v
+
+# Setup X11
+## When we run `startx`, we want our script to run
+echo "npx electron /home/pi/your-app" >> ~/.xinitrc
+chmod +x ~/.xinitrc # Make executable
