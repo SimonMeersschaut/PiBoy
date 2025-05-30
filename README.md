@@ -11,61 +11,13 @@ TODO: fill out software docs
 
 ### Instalation
 
-1. **Clone git repository**: ```git clone github.com/SimonMeersschaut/PiBoy.git```
-2. **Auto start script**: (source: https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup#method-3-systemd).
-Create a new service file using ```sudo nano /lib/systemd/system/piboy.service```
-and add the following content: 
-```
-[Unit]
-Description=Start the Piboy User Interface
-After=graphical.target
+1. **Clone git repository**
 
-[Service]
-Environment=DISPLAY=:0
-Environment=XAUTHORITY=/home/pi/.Xauthority
-Environment=XDG_RUNTIME_DIR=/run/user/1000
-ExecStart=/usr/bin/lxterminal --geometry=250x100 -e "cd ~/Desktop/PiBoy && source env/bin/activate && python3 main.py; bash"
-WorkingDirectory=/home/pi/Desktop/PiBoy
-User=pi
-Group=pi
-KillMode=process
-TimeoutSec=infinity
+```git clone github.com/SimonMeersschaut/PiBoy.git```
 
-[Install]
-WantedBy=graphical.target
-```
-(lxterminal is used to open a visible terminal instead of running in the background. The geometry is set to open in fullscreen. Full paths are used as aliasses might not be resolved yet. 'bash' will make sure that the screen dus not close when an error occurs in the terminal (might not work).)
-After that, run 
-```
-sudo systemctl daemon-reload
-sudo systemctl enable piboy.service
-sudo systemctl start piboy.service
-```
+2. **Run the startup script**
 
-3. Create venv `python3 -m venv env` and `source env/bin/activate`
-
-4. Install `pip install pynput`, `pip install art` and `pip install rpi-gpio`.
-
-### Adding a game
-
-(Nintendo games: https://www.emulatorgames.net/roms/nintendo-ds/new-super-mario-bros-psyfer/)
-NintendoDS online emulator: gamesfrog.com/games/nds
-GameBoy Advance emulator: https://gba.js.org/
-
-The following section will explain how to add a Unity game to the raspberry pi.
-
-1. **Build**: Build the game via `File > Build Settings > Linux x86_64`, then click Build.
-
-2. **Convert C# to C++**: IL2CPP
-
-3. **Cross-compile for aarch64 (ARM64)**: ...
-
-( I dont know the rest, it never worked...)
-
-### Example: Supertux2
-
-install using `sudo apt install supertux` and run using
-`~/../../usr/games/supertux2`.
+```./startup.sh```
 
 ## Hardware
 
