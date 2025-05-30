@@ -1,7 +1,6 @@
 # Heads-Up
 # You must have X11 or Wayland running before Electron will work, even after you install libgbm1.
-sudo apt install xorg
-startx
+sudo apt -y install xorg
 
 # Install Libraries
 sudo apt update
@@ -28,6 +27,3 @@ npm install electron
 # Verify instalation
 node -v
 npm -v
-
-# Run
-npx electron .

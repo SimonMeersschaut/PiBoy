@@ -1,0 +1,1 @@
+startx /usr/bin/npx electron /home/pi/PiBoy/my-electron-app
