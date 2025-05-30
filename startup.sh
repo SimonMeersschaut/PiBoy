@@ -1,3 +1,8 @@
+# Heads-Up
+# You must have X11 or Wayland running before Electron will work, even after you install libgbm1.
+sudo apt install xorg
+startx
+
 # Install Libraries
 sudo apt update
 sudo apt install -y \
@@ -9,7 +14,8 @@ sudo apt install -y \
   libasound2 \
   libgconf-2-4 \
   libxtst6 \
-  libx11-xcb1
+  libx11-xcb1 \
+  libgbm1
 
 # Install Node.js on the Pi
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
