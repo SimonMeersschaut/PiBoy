@@ -11,11 +11,15 @@ TODO: fill out software docs
 
 ### Instalation
 
-1. **Clone git repository**
+1. **Install git**
+
+```sudo apt install git```
+
+2. **Clone git repository**
 
 ```git clone github.com/SimonMeersschaut/PiBoy.git```
 
-2. **Run the startup script**
+3. **Run the startup script**
 
 ```./startup.sh```
 
