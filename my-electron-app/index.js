@@ -14,6 +14,10 @@ function createWindow() {
         frame: true            // true means standard window frame, false removes even the window borders and buttons
     });
     mainWindow.loadFile('index.html');
+    // Register ESC key
+    globalShortcut.register('Escape', () => {
+        app.quit();
+    });
 }
 
 
@@ -34,15 +38,4 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-});
-
-// For closing on ESC
-app.whenReady().then(() => {
-  const mainWindow = new BrowserWindow();
-  mainWindow.loadFile('index.html');
-
-  // Register ESC key
-  globalShortcut.register('Escape', () => {
-    app.quit();
-  });
 });

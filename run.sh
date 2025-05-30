@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/pi/piBoy/my-electron-app
+cd /home/pi/PiBoy/my-electron-app
 npx electron .

@@ -19,18 +19,18 @@ TODO: fill out software docs
 
 ```git clone github.com/SimonMeersschaut/PiBoy.git```
 
-3. **Run the startup script**
+3. **Run the setup script**
 
 ```
-chmod +x ./startup.sh
-./startup.sh
+chmod +x ./setup.sh
+./setup.sh
 ```
 
 4. **Run the app**
 
 ```
 chmod +x ./run.sh
-startx /home/pi/start-electron.sh```
+startx /home/pi/run.sh```
 
 ## Hardware
 
