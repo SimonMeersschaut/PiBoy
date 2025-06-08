@@ -30,7 +30,8 @@ chmod +x ./setup.sh
 
 ```
 chmod +x ./run.sh
-startx /home/pi/run.sh```
+startx /home/pi/run.sh
+```
 
 ## Hardware
 
@@ -39,6 +40,8 @@ The hardware will mostly be 3D printed and soldered. The GPIO pins of the raspbe
 ### Design
 
 ![Version1](https://github.com/user-attachments/assets/8de142db-0275-4dfa-b569-f32158f20b45)
+
+![Version 2](<docs/Design - 2025_06_08.png>)
 
 
 ### Screen
@@ -86,3 +89,23 @@ The hardware will mostly be 3D printed and soldered. The GPIO pins of the raspbe
 | Diameter | 19 mm |
 
 ![Dimensions Buttons](docs/Dimensions_buttons.png)
+
+### JoyStick
+
+https://www.sparkfun.com/thumb-slide-joystick.html
+
+### DPAD
+
+https://www.sparkfun.com/sparkfun-qwiic-directional-pad.html
+https://www.sparkfun.com/sparkfun-qwiic-navigation-switch.html
+https://www.sparkfun.com/sparkfun-navigation-switch-cover-set.html
+
+![Navigation Switch Cover Set](docs/navigation_switch_cover_set.png)
+
+https://www.tme.eu/be/nl/details/tssj5-j/microschakelaars-tact/knitter-switch/tssj-5-j/?brutto=1&currency=EUR
+
+Navigation switch:
+
+https://www.digikey.be/nl/products/detail/e-switch/JS5208/1739634
+
+https://tech.alpsalpine.com/e/products/detail/RKJXT1F42001/
