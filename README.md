@@ -48,19 +48,25 @@ sudo systemctl start piboy.service
 
 3. Create venv `python3 -m venv env` and `source env/bin/activate`
 
-4. Install `pip install pynput`, `pip install art` and `pip install rpi-gpio`.
+<!-- 4. Install `pip install pynput`, `pip install art` and `pip install rpi-gpio`. -->
 
-5. **Set key mapping**
+4. **Set key mapping**
 edit `/boot/firmware/config.txt` and add these lines:
+
 ```
-dtoverlay=gpio-key,gpio=17,keycode=28,label="Enter"
-dtoverlay=gpio-key,gpio=27,keycode=57,label="Space"
+dtoverlay=gpio-key,gpio=26,keycode=103,label="Up"
+gpio=26=pd
+dtoverlay=gpio-key,gpio=19,keycode=106,label="Right"
+gpio=19=pd
+dtoverlay=gpio-key,gpio=13,keycode=108,label="Down"
+gpio=13=pd
+dtoverlay=gpio-key,gpio=6,keycode=105,label="Left"
+gpio=6=pd
 ```
+source: https://unix.stackexchange.com/questions/130656/how-to-get-all-my-keys-to-send-keycodes
+![alt text](docs/Raspberry-Pi-5-Pinout--1210x642.jpg)
 
-Check `ls /dev/input/by-path/` should show `platform-gpio-keys-event`
-
-Test it: `sudo evtest /dev/input/eventX`
-
+And reboot `sudo reboot`; test using `evtest`
 
 ### Adding a game
 
