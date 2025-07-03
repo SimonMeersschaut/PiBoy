@@ -50,6 +50,18 @@ sudo systemctl start piboy.service
 
 4. Install `pip install pynput`, `pip install art` and `pip install rpi-gpio`.
 
+5. **Set key mapping**
+edit `/boot/firmware/config.txt` and add these lines:
+```
+dtoverlay=gpio-key,gpio=17,keycode=28,label="Enter"
+dtoverlay=gpio-key,gpio=27,keycode=57,label="Space"
+```
+
+Check `ls /dev/input/by-path/` should show `platform-gpio-keys-event`
+
+Test it: `sudo evtest /dev/input/eventX`
+
+
 ### Adding a game
 
 (Nintendo games: https://www.emulatorgames.net/roms/nintendo-ds/new-super-mario-bros-psyfer/)
