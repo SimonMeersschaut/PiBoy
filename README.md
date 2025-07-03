@@ -60,13 +60,18 @@ dtoverlay=gpio-key,gpio=19,keycode=106,label="Right"
 gpio=19=pd
 dtoverlay=gpio-key,gpio=13,keycode=108,label="Down"
 gpio=13=pd
-dtoverlay=gpio-key,gpio=6,keycode=105,label="Left"
-gpio=6=pd
+dtoverlay=gpio-key,gpio=5,keycode=105,label="Left"
+gpio=5=pd
 ```
+
+using `cat config.txt | sudo tee ~/../../boot/firmware/config.txt`
 source: https://unix.stackexchange.com/questions/130656/how-to-get-all-my-keys-to-send-keycodes
 ![alt text](docs/Raspberry-Pi-5-Pinout--1210x642.jpg)
 
 And reboot `sudo reboot`; test using `evtest`
+
+
+`sudo apt install triggerhappy` voor repetitions
 
 ### Adding a game
 
