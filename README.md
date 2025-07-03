@@ -148,3 +148,10 @@ The hardware will mostly be 3D printed and soldered. The GPIO pins of the raspbe
 | Diameter | 19 mm |
 
 ![Dimensions Buttons](docs/Dimensions_buttons.png)
+
+| Knop | Draad | GPIO pin|
+|------|-------|-------|
+| Omhoog | Oranje | 13 |
+| Rechts | Geel | 19 |
+| Omlaag | Groen | 26 |
+| Links | Bruin | 5 |
